@@ -4,8 +4,12 @@ import {
   getAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"
 import React from "react";
 
 const firebaseConfig = {
@@ -20,6 +24,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+export const db = getFirestore(app)
 export const auth = getAuth(app);
 
 export function useAuth() {
@@ -44,6 +49,15 @@ export function SignUp(email: string, password: string) {
 
 export function LoginIn(email: string, password: string) {
   return signInWithEmailAndPassword(auth, email, password);
+}
+
+export function LoginWithGoogle() {
+  const googleAuthProvider = new GoogleAuthProvider()
+  return signInWithPopup(auth ,googleAuthProvider)
+}
+
+export function ResetPassword(email: string) {
+  return sendPasswordResetEmail(auth, email)
 }
 
 export function logout() {
