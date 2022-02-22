@@ -22,26 +22,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-onAuthStateChanged(auth, (user) => {
-  if (user != null) {
-    console.log("logged in !");
-  } else {
-    console.log("No user");
-  }
-});
-
 export function useAuth() {
-  const [currentUser, setCurrentUser] = React.useState();
+  const [currentUser, setCurrentUser] = React.useState<any>();
 
-
-  React.useEffect (() => {
+  React.useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user: any) => {
-      setCurrentUser(user)
-    })
-    return unsub
-  }, [])
-console.log("useEffect -> ", currentUser)
-  return currentUser
+      setCurrentUser(user);
+    });
+    return unsub;
+  }, []);
+
+  currentUser &&
+    localStorage.setItem("loggedInUser", JSON.stringify(currentUser));
+
+  return currentUser;
 }
 
 export function SignUp(email: string, password: string) {
@@ -52,6 +46,7 @@ export function LoginIn(email: string, password: string) {
   return signInWithEmailAndPassword(auth, email, password);
 }
 
-export function logout(){
-  return signOut(auth)
+export function logout() {
+  localStorage.clear();
+  return signOut(auth);
 }

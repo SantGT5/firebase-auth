@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import React from "react";
+import { useNavigate } from "react-router";
 import { SignUp } from "../firebase/firebase-config";
 
 export const Register = () => {
+  const navigate = useNavigate()
   const [registerEmail, setRegisterEmail] = React.useState("");
   const [registerPassword, setRegisterPassword] = React.useState("");
 
@@ -13,6 +15,15 @@ export const Register = () => {
       console.log(error.message);
     }
   };
+
+  React.useEffect(() => {
+    const storedUser = localStorage.getItem("loggedInUser");
+    const loggedInUser = JSON.parse(storedUser || '""');
+  
+    if(loggedInUser.apiKey){
+      navigate("/home")
+    }
+  })
 
   return (
     <div>

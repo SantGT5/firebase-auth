@@ -4,15 +4,21 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Login } from "./components/Login";
 import { Register } from "./components/Register";
 import { UserProfile } from "./components/UserProfile";
+import { AuthContextComponent } from "./context/UserContext";
+import PrivateRoutes from "./PrivateRouter/PrivateRoutes";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Register />} />
-        <Route path="/home" element={<UserProfile />} />
-      </Routes>
+      <AuthContextComponent>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Register />} />
+          <Route element={<PrivateRoutes />}>
+            <Route path="/home" element={<UserProfile />} />
+          </Route>
+        </Routes>
+      </AuthContextComponent>
     </BrowserRouter>
   );
 }
