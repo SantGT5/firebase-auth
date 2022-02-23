@@ -2,12 +2,20 @@ import { logout } from "../firebase/firebase-config";
 import { db } from "../firebase/firebase-config";
 import { useNavigate } from "react-router";
 import React from "react";
-import { addDoc, collection, onSnapshot, query } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+} from "firebase/firestore";
 
 export const AddToDo = () => {
   const navigate = useNavigate();
   const [title, setTitle] = React.useState<string>("");
-  const [todos, setTodos] = React.useState<any>([]);
+  const [todos, setTodos] = React.useState<any>();
 
   const handleLogout = async () => {
     try {
@@ -22,17 +30,27 @@ export const AddToDo = () => {
   React.useEffect(() => {
     const q = query(collection(db, "todo"));
 
-    let todosArray: any = [];
-
     const unsub = onSnapshot(q, (querySnapshot) => {
+      let todosArray: any = [];
       querySnapshot.forEach((doc: any) => {
         todosArray.push({ ...doc.data(), id: doc.id });
       });
 
       setTodos(todosArray);
     });
+    return () => unsub();
   }, []);
-  console.log(todos);
+
+  const handleEdit = async (todo: any, e: React.SyntheticEvent) => {
+    e.preventDefault();
+    await updateDoc(doc(db, "todo", todo.id), { title: title });
+    setTitle("");
+  };
+
+  const handleDelete = async (id: any) => {
+    setTitle("");
+    await deleteDoc(doc(db, "todo", id));
+  };
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -46,7 +64,7 @@ export const AddToDo = () => {
       setTitle("");
     }
   };
-
+  
   return (
     <form onSubmit={handleSubmit}>
       <h1>Add ToDo!!</h1>
@@ -58,8 +76,24 @@ export const AddToDo = () => {
           setTitle(e.target.value)
         }
       />
-      <button type="submit">Submit</button>
-      <button onClick={handleLogout}> Sign Out </button>
+      <br />
+      <div>
+        <button type="submit">Submit</button>
+        <button onClick={handleLogout}> Sign Out </button>
+      </div>
+      <br />
+      <div>
+        {todos?.map((todo: any) => {
+          return (
+            <div key={todo.id}>
+              <span>{todo.title}</span>&nbsp;&nbsp;
+              <button onClick={(e) => handleEdit(todo, e)}>Edit</button>
+              &nbsp;&nbsp;
+              <button onClick={() => handleDelete(todo.id)}>Delete</button>
+            </div>
+          );
+        })}
+      </div>
     </form>
   );
 };
