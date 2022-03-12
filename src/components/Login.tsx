@@ -44,12 +44,13 @@ export const Login = () => {
     e.preventDefault();
 
     try {
-      ResetPassword(loginEmail);
-      navigate("/login");
+      await ResetPassword(loginEmail);
+      console.log("reset button", loginEmail)
+       navigate("/login");
     } catch (e: any) {
-      console.log(e);
+      console.log(e.message);
     }
-  };
+  };  
 
   return (
     <form onSubmit={handleSubmit}>

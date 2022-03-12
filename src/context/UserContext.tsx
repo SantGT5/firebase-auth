@@ -21,7 +21,6 @@ function AuthContextComponent(props: any) {
     }
     addUser();
   }, []);
-  console.log("Context -> ", loggedInUser);
 
   return (
     <authContext.Provider value={{ loggedInUser, setLoggedInUser }}>
