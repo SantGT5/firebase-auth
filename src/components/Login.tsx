@@ -1,6 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth, LoginIn, LoginWithGoogle, ResetPassword } from "../firebase/firebase-config";
+import {
+  useAuth,
+  LoginIn,
+  LoginWithGoogle,
+  ResetPassword,
+} from "../firebase/firebase-config";
 import { useNavigate } from "react-router";
 
 export const Login = () => {
@@ -45,12 +50,12 @@ export const Login = () => {
 
     try {
       await ResetPassword(loginEmail);
-      console.log("reset button", loginEmail)
-       navigate("/login");
+      console.log("reset button", loginEmail);
+      navigate("/login");
     } catch (e: any) {
       console.log(e.message);
     }
-  };  
+  };
 
   return (
     <form onSubmit={handleSubmit}>

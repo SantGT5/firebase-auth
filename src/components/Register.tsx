@@ -26,10 +26,10 @@ export const Register = () => {
   })
 
   return (
-    <div>
+    <div id="container">
       <Link to="/login">Login</Link>
 
-      <h3> Register User </h3>
+      <h3>Register User</h3>
       <input
         placeholder="Email..."
         onChange={(event) => {
